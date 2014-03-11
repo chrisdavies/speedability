@@ -1,0 +1,39 @@
+{
+    "name": "Quick-Read",
+
+    "description": "Quick read of readability pages",
+    
+	"version": "1.12",
+    
+	"permissions": [
+		"tabs",
+		"*://*.readability.com/*",
+		"*://readability.com/*",
+		"background"
+    ],
+
+	"page_action": {
+        "default_icon": "icon.png",
+        "default_title": "Quick Read",
+        "default_popup": "popup.html"
+    },
+
+	"background": {
+        "scripts": ["background.js"],
+		"persistent" : false
+    },
+
+	"content_scripts": [
+        {
+        "matches": [
+            "*://*.readability.com/*",
+			"*://readability.com/*"
+            ],
+        "js": ["content.js"],
+        "run_at": "document_end"         // pay attention to this line
+        }
+    ], 
+
+	"offline_enabled": true,
+    "manifest_version":2
+}

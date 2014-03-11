@@ -131,6 +131,7 @@ var QuickRead = {
         on('click', 'toggle', function () {
             updateInterval();
             scheduler.toggle();
+            drawCurrent();
         });
 
         on('click', 'movePrev', movePrev);

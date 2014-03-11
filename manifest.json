@@ -5,7 +5,11 @@
     
 	"version": "1.12",
 
-	"icons": { "16": "icon-16.png", "48": "icon-48.png", "128": "icon.png" },
+	"icons": { 
+		"16": "icon-16.png", 
+		"48": "icon-48.png", 
+		"128": "icon.png" 
+	},
     
 	"permissions": [
 		"tabs",
@@ -33,10 +37,11 @@
 			"*://readability.com/*"
             ],
         "js": ["content.js"],
-        "run_at": "document_end"         // pay attention to this line
+        "run_at": "document_end"
         }
     ], 
 
 	"offline_enabled": true,
-    "manifest_version":2
+
+    "manifest_version": 2
 }

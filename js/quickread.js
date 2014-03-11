@@ -32,8 +32,13 @@ var QuickRead = {
             renderer.render(words.current());
         }
 
+        function updateProgress() {
+            document.getElementById('progress').style.width = words.progress() + '%';
+        }
+
         function redraw() {
             drawCurrent();
+            updateProgress();
             if (!words.moveNext()) {
                 scheduler.pause();
                 words.reset();

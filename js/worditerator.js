@@ -28,6 +28,10 @@ var WordIterator = {
                 return WordIterator.parts(this.isInRange(this.index) ? this.words[this.index] : '');
             },
 
+            progress: function() {
+                return Math.max(0, Math.min(100, ((this.index / this.words.length) * 100)));
+            },
+
             isInRange: function (index) {
                 return this.index >= 0 && this.index < this.words.length;
             },

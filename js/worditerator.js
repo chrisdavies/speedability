@@ -33,7 +33,7 @@ var WordIterator = {
             },
 
             setProgress: function (progress) {
-                this.setIndex(Math.floor(((progress || 0) / 100) * this.words.length) - 10);
+                this.setIndex(Math.min(Math.max(0, Math.floor(((progress || 0) / 100) * this.words.length) - 1), this.words.length - 1));
             },
 
             isInRange: function (index) {

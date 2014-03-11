@@ -9,7 +9,7 @@ function WordRenderer(container) {
 
 WordRenderer.prototype = {
     wordToHtml: function (word) {
-        return '<span class="word">' + HtmlUtil.escape(word.beginning) + '<span class="word-focus">' + HtmlUtil.escape(word.middle) + '</span>' + HtmlUtil.escape(word.end) + '</span>';
+        return '<span class="word">' + HtmlUtil.escape(word.beginning) + '<span class="word-focus">' + HtmlUtil.escape(word.middle) + '</span>' + HtmlUtil.escape(word.end) + '</span>&nbsp;';
     },
 
     render: function (word) {
@@ -84,6 +84,7 @@ var QuickRead = {
         function drawCurrent() {
             renderer.render(words.current());
             updateProgress();
+            updatePlayPauseButton();
         }
 
         function updateProgress() {
@@ -103,39 +104,58 @@ var QuickRead = {
             drawCurrent();
 
             if (!words.moveNext()) {
-                document.getElementById('debug').innerText = 'done ' + words.index + '-' + words.words.length;
-
                 scheduler.pause();
                 words.reset();
             }
 
             updatePlayPauseButton();
         }
-        
-        // DOM events
-        function click(id, fn) {
-            document.getElementById(id).onclick = fn;
+
+        function movePrev() {
+            scheduler.pause();
+            words.movePrev();
+            drawCurrent();
         }
 
-        click('toggle', function () {
+        function moveNext() {
+            scheduler.pause();
+            words.moveNext();
+            drawCurrent();
+        }
+
+        // DOM events
+        function on(evt, id, fn) {
+            document.getElementById(id)['on' + evt] = fn;
+        }
+
+        on('click', 'toggle', function () {
             updateInterval();
             scheduler.toggle();
         });
 
-        click('movePrev', function () {
-            scheduler.pause();
-            words.movePrev();
-            drawCurrent();
+        on('click', 'movePrev', movePrev);
+        on('click', 'moveNext', moveNext);
+
+        on('dblclick', 'movePrev', function () {
+            words.setProgress(0);
+            redraw();
         });
 
-        click('moveNext', function () {
-            scheduler.pause();
-            words.moveNext();
-            drawCurrent();
+        on('dblclick', 'moveNext', function () {
+            words.setProgress(100);
+            redraw();
         });
 
         wpmElement.onchange = function () {
             updateInterval();
+        }
+
+        document.onkeydown = function (e) {
+            if (e.keyCode == 37) {
+                movePrev();
+            } else if (e.keyCode == 39) {
+                moveNext();
+            }
         }
         
         chrome.tabs.getSelected(null, function (tab) {

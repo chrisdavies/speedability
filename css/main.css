@@ -35,6 +35,7 @@
     content: '\e801';
 }
 
+.icon-play.playing:before,
 .icon-pause:before {
     content: '\e802';
 }
@@ -47,12 +48,15 @@
     content: '\e805';
 }
 
-
 body {
     font-family: Arial, sans-serif;
     color: #444;
     line-height: 1.5em;
     min-width: 30em;
+}
+
+button {
+    outline: none;
 }
 
 .settings li {

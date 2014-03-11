@@ -37,7 +37,11 @@ Scheduler.prototype = {
     },
 
     toggle: function () {
-        this.timeout ? this.pause() : this.resume();
+        this.isRunning() ? this.pause() : this.resume();
+    },
+
+    isRunning: function () {
+        return !!this.timeout;
     }
 }
 
@@ -177,6 +181,12 @@ var QuickRead = {
         click('toggle', function () {
             updateInterval();
             scheduler.toggle();
+            var button = document.getElementById('toggle');
+            if (scheduler.isRunning()) {
+                button.classList.add('playing');
+            } else {
+                button.classList.remove('playing');
+            }
         });
 
         click('movePrev', function () {

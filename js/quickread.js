@@ -19,34 +19,42 @@ WordRenderer.prototype = {
 
 // Storage ///////////////////////////////////////////////////////////
 var Settings = {
-    setSettings: function (value) {
-        chrome.storage.local.set({ settings: value });
+    updateSettings: function (fn) {
+        var settings = this.getSettings();
+        fn(settings);
+        localStorage.setItem('settings', JSON.stringify(settings));
     },
 
-    getSettings: function (fn) {
-        chrome.storage.local.get('settings', function (value) {
-            fn(value.settings || {});
-        });
+    getSettings: function () {
+        return JSON.parse(localStorage.getItem('settings') || '{}');
+    },
+
+    getWpm: function () {
+        return this.getSettings().wpm || 300;
     },
 
     setWpm: function (wpm) {
-        var me = this;
-        me.getSettings(function (settings) {
+        this.updateSettings(function (settings) {
             settings.wpm = wpm;
-            me.setSettings(settings);
         });
     },
 
-    getWpm: function (fn) {
-        this.getSettings(function (settings) {
-            fn(settings.wpm || 300);
+    setProgress: function (url, progress) {
+        var maxSize = 2;
+        this.updateSettings(function (settings) {
+            settings.progress = RoundRobbin.add(maxSize, settings.progress, {
+                id: url,
+                updated: new Date(),
+                progress: progress
+            });
         });
     },
 
-    /*
-    setProgress(url, progress)
-    getProgress(url)
-    */
+    getProgress: function (url) {
+        return (RoundRobbin.get(this.getSettings().progress, url) || {
+            progress: 0
+        }).progress;
+    }
 }
 
 // Glue ///////////////////////////////////////////////////////////
@@ -57,6 +65,11 @@ var QuickRead = {
             scheduler = new Scheduler(redraw),
             container = document.getElementById('container'),
             renderer = new WordRenderer(container);
+
+        if (!context.text) {
+            container.innerHTML = ':/';
+            return;
+        }
 
         function updateWords() {
             words = WordIterator.parse(context.text);
@@ -70,6 +83,7 @@ var QuickRead = {
 
         function drawCurrent() {
             renderer.render(words.current());
+            updateProgress();
         }
 
         function updateProgress() {
@@ -87,20 +101,17 @@ var QuickRead = {
 
         function redraw() {
             drawCurrent();
-            updateProgress();
 
             if (!words.moveNext()) {
+                document.getElementById('debug').innerText = 'done ' + words.index + '-' + words.words.length;
+
                 scheduler.pause();
                 words.reset();
             }
 
             updatePlayPauseButton();
         }
-
-        updateWords();
-        updateInterval();
-        container.innerText = "Ready.";
-
+        
         // DOM events
         function click(id, fn) {
             document.getElementById(id).onclick = fn;
@@ -126,10 +137,24 @@ var QuickRead = {
         wpmElement.onchange = function () {
             updateInterval();
         }
+        
+        chrome.tabs.getSelected(null, function (tab) {
+            wpmElement.value = Settings.getWpm();
 
-        // Load settings
-        Settings.getWpm(function (wpm) {
-            wpmElement.value = wpm;
+            updateWords();
+
+            var progress = Settings.getProgress(tab.url);
+            if (progress) {
+                words.setProgress(progress);
+            }
+
+            updateInterval();
+            redraw();
+            container.innerText = "Ready.";
+
+            window.onunload = function () {
+                Settings.setProgress(tab.url, words.progress());
+            };
         });
     }
 }

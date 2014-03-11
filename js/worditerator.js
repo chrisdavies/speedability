@@ -28,18 +28,25 @@ var WordIterator = {
                 return WordIterator.parts(this.isInRange(this.index) ? this.words[this.index] : '');
             },
 
-            progress: function() {
+            progress: function () {
                 return Math.max(0, Math.min(100, ((this.index / this.words.length) * 100)));
             },
 
+            setProgress: function (progress) {
+                this.setIndex(Math.floor(((progress || 0) / 100) * this.words.length) - 10);
+            },
+
             isInRange: function (index) {
-                return this.index >= 0 && this.index < this.words.length;
+                return index >= 0 && index < this.words.length;
             },
 
             adjust: function (i) {
-                var index = this.index + i;
-                if (this.isInRange(index)) {
-                    this.index = index;
+                return this.setIndex(this.index + i);
+            },
+
+            setIndex: function (i) {
+                if (this.isInRange(i)) {
+                    this.index = i;
                     return true;
                 }
 

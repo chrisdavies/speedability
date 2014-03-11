@@ -1,11 +1,4 @@
-﻿// Trim //////////////////////////////////////////////
-if (!String.prototype.trim) {
-    String.prototype.trim = function () {
-        return this.replace(/^\s+|\s+$/g, '');
-    };
-}
-
-// Scheduler /////////////////////////////////////////
+﻿// Scheduler /////////////////////////////////////////
 
 function Scheduler(fn, interval) {
     this.interval = interval || 200;
@@ -50,7 +43,7 @@ Scheduler.prototype = {
 var Words = {
     parse: function (message) {
         function getWords() {
-            return (message || '').trim().split(/\s+/g)
+            return (message || '').replace(/\-+|\—+/g, '- ').split(/\s+/g)
         }
 
         return {

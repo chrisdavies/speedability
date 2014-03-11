@@ -9,7 +9,8 @@
 		"tabs",
 		"*://*.readability.com/*",
 		"*://readability.com/*",
-		"background"
+		"background",
+		"storage"
     ],
 
 	"page_action": {

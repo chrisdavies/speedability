@@ -1,4 +1,9 @@
-﻿function WordRenderer(container) {
+﻿/*
+    This script concerns itself with the DOM, events, and storage.
+*/
+
+// Rendering ///////////////////////////////////////////////////////////
+function WordRenderer(container) {
     this.container = container;
 }
 
@@ -12,10 +17,43 @@ WordRenderer.prototype = {
     }
 }
 
+// Storage ///////////////////////////////////////////////////////////
+var Settings = {
+    setSettings: function (value) {
+        chrome.storage.local.set({ settings: value });
+    },
+
+    getSettings: function (fn) {
+        chrome.storage.local.get('settings', function (value) {
+            fn(value.settings || {});
+        });
+    },
+
+    setWpm: function (wpm) {
+        var me = this;
+        me.getSettings(function (settings) {
+            settings.wpm = wpm;
+            me.setSettings(settings);
+        });
+    },
+
+    getWpm: function (fn) {
+        this.getSettings(function (settings) {
+            fn(settings.wpm || 300);
+        });
+    },
+
+    /*
+    setProgress(url, progress)
+    getProgress(url)
+    */
+}
+
 // Glue ///////////////////////////////////////////////////////////
 var QuickRead = {
     init: function (context) {
         var words = undefined,
+            wpmElement = document.getElementById('wpm'),
             scheduler = new Scheduler(redraw),
             container = document.getElementById('container'),
             renderer = new WordRenderer(container);
@@ -25,7 +63,9 @@ var QuickRead = {
         }
 
         function updateInterval() {
-            scheduler.setInterval(Scheduler.intervalsFromMinute(parseInt(document.getElementById('wpm').value)));
+            var wpm = parseInt(wpmElement.value);
+            Settings.setWpm(wpm);
+            scheduler.setInterval(Scheduler.intervalsFromMinute(wpm));
         }
 
         function drawCurrent() {
@@ -83,8 +123,13 @@ var QuickRead = {
             drawCurrent();
         });
 
-        document.getElementById('wpm').onchange = function () {
+        wpmElement.onchange = function () {
             updateInterval();
         }
+
+        // Load settings
+        Settings.getWpm(function (wpm) {
+            wpmElement.value = wpm;
+        });
     }
 }

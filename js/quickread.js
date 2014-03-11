@@ -36,13 +36,25 @@ var QuickRead = {
             document.getElementById('progress').style.width = words.progress() + '%';
         }
 
+        function updatePlayPauseButton() {
+            var button = document.getElementById('toggle');
+            if (scheduler.isRunning()) {
+                button.classList.add('playing');
+            } else {
+                button.classList.remove('playing');
+            }
+        }
+
         function redraw() {
             drawCurrent();
             updateProgress();
+
             if (!words.moveNext()) {
                 scheduler.pause();
                 words.reset();
             }
+
+            updatePlayPauseButton();
         }
 
         updateWords();
@@ -57,12 +69,6 @@ var QuickRead = {
         click('toggle', function () {
             updateInterval();
             scheduler.toggle();
-            var button = document.getElementById('toggle');
-            if (scheduler.isRunning()) {
-                button.classList.add('playing');
-            } else {
-                button.classList.remove('playing');
-            }
         });
 
         click('movePrev', function () {

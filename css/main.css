@@ -135,3 +135,18 @@ button {
     background: #d6def3;
     color: #000;
 }
+
+.progress-bar {
+    margin: 1em 0;
+}
+
+.progress-bar,
+.progress {    
+    height: 0.2em;
+    background: #e8edfa;
+    box-sizing: border-box;
+}
+
+.progress {
+    background: #a7bcff;
+}

@@ -40,7 +40,7 @@ var Settings = {
     },
 
     setProgress: function (url, progress) {
-        var maxSize = 2;
+        var maxSize = 10;
         this.updateSettings(function (settings) {
             settings.progress = RoundRobbin.add(maxSize, settings.progress, {
                 id: url,

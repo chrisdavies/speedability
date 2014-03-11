@@ -3,11 +3,11 @@
         arr = (arr || []).filter(function (i) {
             return i.id != item.id;
         }).sort(function (a, b) {
-            return a.updated.getTime() - b.updated.getTime();
+            return Date.parse(a.updated) - Date.parse(b.updated);
         });
-
+        
         if (arr.length >= maxSize) {
-            arr = arr.splice(0, arr.length - maxSize);
+            arr.splice(0, arr.length - maxSize);
         }
 
         arr.push(item);

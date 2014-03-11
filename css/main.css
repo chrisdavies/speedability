@@ -59,6 +59,10 @@ button {
     outline: none;
 }
 
+.settings {
+    padding: 0;
+}
+
 .settings li {
     list-style-type: none;
 }

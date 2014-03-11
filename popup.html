@@ -2,65 +2,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Yo. Dis be me.</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            color: #444;
-            line-height: 1.5em;
-        }
 
-        #container {
-            font-family: 'Times New Roman', serif;
-            font-size: 2em;
-            padding: 2em;
-            min-width: 50em;
-        }
-
-        .settings li {
-            list-style-type: none;
-        }
-
-        .settings textarea,
-        .settings input[type=text],
-        .settings input[type=number] {
-            border: 1px solid #a7bcff;
-            font-size: 1em;
-        }
-
-        .settings textarea {
-            width: 50em;
-            height: 5em;
-        }
-
-        .settings label {
-            display: block;
-            margin-bottom: 0.5em;
-        }
-
-        .settings .section {
-            margin-bottom: 1.5em;
-        }
-
-        .word-focus {
-            color: red;
-        }
-    </style>
-
+    <link href="css/main.css" rel="stylesheet" />
 </head>
 <body>
-    <div id="container">Loading...</div>
 
-    <ul class="settings">
-        <li class="section">
-            <label>Words Per Minute:</label>
-            <input id="wpm" type="number" value="350" />
-        </li>
-        <li>
-            <button id="movePrev">Prev</button>
-            <button id="toggle">Start/Pause</button>
-            <button id="moveNext">Next</button>
-        </li>
-    </ul>
+    <div class="content-wrapper main">
+        <div id="container" class="current-word">Loading...</div>
+
+        <ul class="settings">
+            <li class="section">
+                <label>Words Per Minute:</label>
+                <input id="wpm" type="number" value="350" />
+            </li>
+            <li class="control-bar">
+                <button id="movePrev" class="icon-left"></button>
+                <button id="toggle" class="icon-play primary"></button>
+                <button id="moveNext" class="icon-right"></button>
+            </li>
+        </ul>
+    </div>
     
     <script src="popup.js"></script>
     <script src="quickread.js"></script>

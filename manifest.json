@@ -3,7 +3,7 @@
 
     "description": "Speed read readability pages similarly to Spritz.",
     
-	"version": "1.12",
+	"version": "1.13",
 
 	"icons": { 
 		"16": "icon-16.png", 
